@@ -11,7 +11,7 @@ const callback = argv['callback']
   : function (res) {
     console.log(res.data)
   }
-const env = { ...argv }
+const env = Object.assign({}, argv)
 delete env._
 
 const configFilePathname = path.join(process.env.PWD, configName)
