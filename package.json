@@ -1,10 +1,10 @@
 {
-  "name": "requester2",
+  "name": "send2",
   "version": "0.0.1",
   "description": "",
   "main": "lib/client.js",
   "bin": {
-    "requester": "./bin/client.js"
+    "send2": "./bin/client.js"
   },
   "files": [
     "bin",
