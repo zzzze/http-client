@@ -12,7 +12,7 @@
     "yarn.lock"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha tests/**/*.test.js"
   },
   "author": "",
   "license": "ISC",
@@ -20,5 +20,13 @@
     "axios": "^0.19.0",
     "commander": "^3.0.2",
     "deepmerge": "^4.2.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-subset": "^1.6.0",
+    "mocha": "^6.2.2",
+    "proxyquire": "^2.1.3",
+    "sinon": "^7.5.0",
+    "sinon-chai": "^3.3.0"
   }
 }
