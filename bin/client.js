@@ -5,7 +5,7 @@ const request = require('../lib/client')
 
 const subCommand = [
   'help',
-  'configs',
+  // 'configs',
 ]
 
 function parseData(value) {
@@ -57,14 +57,14 @@ program
   .option('--callback <script>', 'Scripts run after fetch success.')
   .option('--env <env>', 'Env.', parseEnv, {})
   .option('--json-string', 'Return data in JSON string format.')
-  .option('-o, --output <file>', 'Write to file instead of stdout.')
+  // .option('-o, --output <file>', 'Write to file instead of stdout.')
   .on('--help', function () {
     console.log('')
     console.log('Examples:')
     console.log('  $ send2 http://test.com')
     console.log('  $ send2 -K ./configs/fetch-data.js')
   })
-  .command('configs', 'Get final configs', {executableFile: 'configs'})
+  // .command('configs', 'Get final configs', {executableFile: 'configs'})
   .parse(process.argv)
 
 if (!subCommand.includes(process.argv[2])) {
