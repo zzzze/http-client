@@ -6,9 +6,7 @@ module.exports = [{
     url: 'http://test.com',
   }, undefined, {
     callback: undefined,
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
   }],
 }, {
   input: 'send2 --url http://test.com',
@@ -16,9 +14,7 @@ module.exports = [{
     url: 'http://test.com',
   }, undefined, {
     callback: undefined,
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
   }],
 }, {
   input: 'send2 http://test-2.com --url http://test.com',
@@ -26,9 +22,7 @@ module.exports = [{
     url: 'http://test.com',
   }, undefined, {
     callback: undefined,
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
   }],
 }, {
   input: 'send2 http://test-2.com -K ./test.js',
@@ -36,9 +30,7 @@ module.exports = [{
     url: 'http://test-2.com',
   }, path.resolve(process.env.PWD, './test.js'), {
     callback: undefined,
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
   }],
 }, {
   input: 'send2 http://test-2.com -K ./test/abc',
@@ -46,9 +38,7 @@ module.exports = [{
     url: 'http://test-2.com',
   }, path.resolve(process.env.PWD, './test/abc'), {
     callback: undefined,
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
   }],
 }, {
   input: 'send2 http://test-2.com --config ./test/abc',
@@ -56,9 +46,7 @@ module.exports = [{
     url: 'http://test-2.com',
   }, path.resolve(process.env.PWD, './test/abc'), {
     callback: undefined,
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
   }],
 }, {
   input: 'send2 -X POST',
@@ -66,9 +54,7 @@ module.exports = [{
     method: 'POST',
   }, undefined, {
     callback: undefined,
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
   }],
 }, {
   input: 'send2 --method POST',
@@ -76,9 +62,7 @@ module.exports = [{
     method: 'POST',
   }, undefined, {
     callback: undefined,
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
   }],
 }, {
   input: 'send2 --request POST',
@@ -86,25 +70,19 @@ module.exports = [{
     method: 'POST',
   }, undefined, {
     callback: undefined,
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
   }],
 }, {
   input: 'send2 --callback "test"',
   output: [{}, undefined, {
     callback: 'test',
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
   }],
 }, {
   input: 'send2 --callback "function (res) { return res.data }"',
   output: [{}, undefined, {
     callback: 'function (res) { return res.data }',
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
   }],
 }, {
   input: 'send2 --data "data"',
@@ -112,9 +90,7 @@ module.exports = [{
     data: 'data',
   }, undefined, {
     callback: undefined,
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
   }],
 }, {
   input: 'send2 --data "10"',
@@ -122,9 +98,7 @@ module.exports = [{
     data: 10,
   }, undefined, {
     callback: undefined,
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
   }],
 }, {
   input: 'send2 --data "{\\"a\\": 10, \\"b\\": 20}"',
@@ -132,9 +106,7 @@ module.exports = [{
     data: {a: 10, b: 20},
   }, undefined, {
     callback: undefined,
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
   }],
 }, {
   input: 'send2 -d "data"',
@@ -142,9 +114,7 @@ module.exports = [{
     data: 'data',
   }, undefined, {
     callback: undefined,
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
   }],
 }, {
   input: 'send2 -d "10"',
@@ -152,9 +122,7 @@ module.exports = [{
     data: 10,
   }, undefined, {
     callback: undefined,
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
   }],
 }, {
   input: 'send2 -d "{\\"a\\": 10, \\"b\\": 20}"',
@@ -162,8 +130,51 @@ module.exports = [{
     data: {a: 10, b: 20},
   }, undefined, {
     callback: undefined,
-    env: undefined,
-    returnConfigs: undefined,
-    jsonString: undefined,
+    env: {},
+  }],
+}, {
+  input: 'send2 --header "User-Agent:Mozilla/5.0"',
+  output: [{
+    headers: {
+      'User-Agent': 'Mozilla/5.0',
+    }
+  }, undefined, {
+    callback: undefined,
+    env: {},
+  }],
+}, {
+  input: 'send2 --header "User-Agent:Mozilla/5.0" -H "Accept:application/json, text/plain, */*"',
+  output: [{
+    headers: {
+      'User-Agent': 'Mozilla/5.0',
+      'Accept': 'application/json, text/plain, */*',
+    }
+  }, undefined, {
+    callback: undefined,
+    env: {},
+  }],
+}, {
+  input: 'send2 -H "User-Agent:Mozilla/5.0" -H "Accept:application/json, text/plain, */*" -H "Cookie:uid=123456"',
+  output: [{
+    headers: {
+      'User-Agent': 'Mozilla/5.0',
+      'Accept': 'application/json, text/plain, */*',
+      'Cookie': 'uid=123456',
+    }
+  }, undefined, {
+    callback: undefined,
+    env: {},
+  }],
+}, {
+  input: 'send2 --env "a:10" --env "b:{\\"test\\": \\"abc\\"}" --env "c: \\"def\\""',
+  output: [{}, undefined, {
+    callback: undefined,
+    env: {
+      a: 10,
+      b: {
+        test: 'abc',
+      },
+      c: 'def',
+    },
   }],
 }]

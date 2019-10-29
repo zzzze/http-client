@@ -4,9 +4,7 @@
   "description": "",
   "main": "lib/client.js",
   "bin": {
-    "send2": "./bin/client.js",
-    "send2-configs": "./bin/configs.js",
-    "send2-request": "./bin/request.js"
+    "send2": "./bin/client.js"
   },
   "files": [
     "bin",

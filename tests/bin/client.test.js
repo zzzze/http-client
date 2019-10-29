@@ -18,7 +18,7 @@ describe('Command line test', () => {
       .match(/\s?"[^"]*"\s?|[^\s]*\s?/g)
       .reduce((result, str) => {
         if (str) {
-          result.push(str.replace(/#@_=/g, '\"').replace(/^"|"$/g, '').trim())
+          result.push(str.replace(/#@_=/g, '\"').replace(/^"|"\s?$/g, '').trim())
         }
         return result
       }, [])

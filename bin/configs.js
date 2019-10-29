@@ -11,7 +11,7 @@ let argv = process.argv.reduce((result, item) => {
 }, [])
 
 program
-  .description('Get final configs')
+  .description('Get final configs.')
   .option('--json-string', 'Return data in JSON string format.')
   .option('-o, --output <file>', 'Write to file instead of stdout.')
   .on('--help', function () {
