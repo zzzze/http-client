@@ -2,47 +2,13 @@
 const path = require('path')
 const program = require('commander')
 const request = require('../lib/client')
+const parseData = require('../lib/parseData')
+const parseHeader = require('../lib/parseHeader')
 
 const subCommand = [
   'help',
   // 'configs',
 ]
-
-function parseData(value) {
-  try {
-    return JSON.parse(value)
-  } catch (e) {
-    return value
-  }
-}
-
-function parseHeader(value, previous) {
-  const breakPointIndex = value.indexOf(':')
-  const headerKey = value.slice(0, breakPointIndex)
-  const headerValue = value.slice(breakPointIndex + 1)
-  return {
-    ...previous,
-    [headerKey]: headerValue,
-  }
-}
-
-function parseEnv(value, previous) {
-  const breakPointIndex = value.indexOf(':')
-  const envKey = value.slice(0, breakPointIndex)
-  const envValue = value.slice(breakPointIndex + 1)
-  let parsedValue = ''
-  try {
-    parsedValue = JSON.parse(envValue)
-  } catch (e) {
-    parsedValue = envValue
-  }
-  return {
-    ...previous,
-    [envKey]: parsedValue,
-  }
-}
-
-// console.log('argv', process.argv)
 
 program
   .usage('[url] [options] | send2 [command] [options]')
@@ -55,16 +21,18 @@ program
   .option('-H, --header <header>', 'Extra header to include in the request when sending to a server.', parseHeader, {})
   .option('--url <url>', 'Specify a URL to fetch.')
   .option('--callback <script>', 'Scripts run after fetch success.')
-  .option('--env <env>', 'Env.', parseEnv, {})
+  .option('--env <env>', 'Env.', parseData, {})
   .option('--json-string', 'Return data in JSON string format.')
-  // .option('-o, --output <file>', 'Write to file instead of stdout.')
+  .option('--base-config', 'Specify a base config file.')
+// .option('-o, --output <file>', 'Write to file instead of stdout.')
   .on('--help', function () {
     console.log('')
     console.log('Examples:')
     console.log('  $ send2 http://test.com')
     console.log('  $ send2 -K ./configs/fetch-data.js')
+    console.log('  $ send2 --data "{\"a\": 10, \"b\": 20}"')
   })
-  // .command('configs', 'Get final configs', {executableFile: 'configs'})
+// .command('configs', 'Get final configs', {executableFile: 'configs'})
   .parse(process.argv)
 
 if (!subCommand.includes(process.argv[2])) {
@@ -84,8 +52,11 @@ if (!subCommand.includes(process.argv[2])) {
   })
 
   const configFileName = program.config && path.join(process.env.PWD, program.config)
-  request(config, configFileName, {
+  request({
+    config,
+    configFileName,
     env: program.env,
+    baseConfig: program.baseConfig,
     callback: program.callback,
   }).then(res => console.log(program.jsonString ? JSON.stringify(res) : res))
 }

@@ -3,171 +3,204 @@ const path = require('path')
 module.exports = [{
   input: 'send2 http://test.com',
   output: [{
-    url: 'http://test.com',
-  }, undefined, {
+    config: {
+      url: 'http://test.com',
+    },
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 --url http://test.com',
   output: [{
-    url: 'http://test.com',
-  }, undefined, {
+    config: {
+      url: 'http://test.com',
+    },
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 http://test-2.com --url http://test.com',
   output: [{
-    url: 'http://test.com',
-  }, undefined, {
+    config: {
+      url: 'http://test.com',
+    },
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 http://test-2.com -K ./test.js',
   output: [{
-    url: 'http://test-2.com',
-  }, path.resolve(process.env.PWD, './test.js'), {
+    config: {
+      url: 'http://test-2.com',
+    },
+    configFileName: path.resolve(process.env.PWD, './test.js'),
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 http://test-2.com -K ./test/abc',
   output: [{
-    url: 'http://test-2.com',
-  }, path.resolve(process.env.PWD, './test/abc'), {
+    config: {
+      url: 'http://test-2.com',
+    },
+    configFileName: path.resolve(process.env.PWD, './test/abc'),
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 http://test-2.com --config ./test/abc',
   output: [{
-    url: 'http://test-2.com',
-  }, path.resolve(process.env.PWD, './test/abc'), {
+    config: {
+      url: 'http://test-2.com',
+    },
+    configFileName: path.resolve(process.env.PWD, './test/abc'),
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 -X POST',
   output: [{
-    method: 'POST',
-  }, undefined, {
+    config: {
+      method: 'POST',
+    },
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 --method POST',
   output: [{
-    method: 'POST',
-  }, undefined, {
+    config: {
+      method: 'POST',
+    },
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 --request POST',
   output: [{
-    method: 'POST',
-  }, undefined, {
+    config: {
+      method: 'POST',
+    },
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 --callback "test"',
-  output: [{}, undefined, {
+  output: [{
+    config: {},
     callback: 'test',
     env: {},
   }],
 }, {
   input: 'send2 --callback "function (res) { return res.data }"',
-  output: [{}, undefined, {
+  output: [{
+    config: {},
     callback: 'function (res) { return res.data }',
     env: {},
   }],
 }, {
   input: 'send2 --data "data"',
   output: [{
-    data: 'data',
-  }, undefined, {
+    config: {
+      data: 'data',
+    },
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 --data "10"',
   output: [{
-    data: 10,
-  }, undefined, {
+    config: {
+      data: 10,
+    },
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 --data "{\\"a\\": 10, \\"b\\": 20}"',
   output: [{
-    data: {a: 10, b: 20},
-  }, undefined, {
+    config: {
+      data: {a: 10, b: 20},
+    },
+    callback: undefined,
+    env: {},
+  }],
+}, {
+  input: 'send2 --data "{\\"a\\": 10, \\"b\\": 20}" --data "c: 30" --data "d:40"',
+  output: [{
+    config: {
+      data: {a: 10, b: 20, c: 30, d: 40},
+    },
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 -d "data"',
   output: [{
-    data: 'data',
-  }, undefined, {
+    config: {
+      data: 'data',
+    },
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 -d "10"',
   output: [{
-    data: 10,
-  }, undefined, {
+    config: {
+      data: 10,
+    },
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 -d "{\\"a\\": 10, \\"b\\": 20}"',
   output: [{
-    data: {a: 10, b: 20},
-  }, undefined, {
+    config: {
+      data: {a: 10, b: 20},
+    },
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 --header "User-Agent:Mozilla/5.0"',
   output: [{
-    headers: {
-      'User-Agent': 'Mozilla/5.0',
-    }
-  }, undefined, {
+    config: {
+      headers: {
+        'User-Agent': 'Mozilla/5.0',
+      },
+    },
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 --header "User-Agent:Mozilla/5.0" -H "Accept:application/json, text/plain, */*"',
   output: [{
-    headers: {
-      'User-Agent': 'Mozilla/5.0',
-      'Accept': 'application/json, text/plain, */*',
-    }
-  }, undefined, {
+    config: {
+      headers: {
+        'User-Agent': 'Mozilla/5.0',
+        'Accept': 'application/json, text/plain, */*',
+      }
+    },
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 -H "User-Agent:Mozilla/5.0" -H "Accept:application/json, text/plain, */*" -H "Cookie:uid=123456"',
   output: [{
-    headers: {
-      'User-Agent': 'Mozilla/5.0',
-      'Accept': 'application/json, text/plain, */*',
-      'Cookie': 'uid=123456',
-    }
-  }, undefined, {
+    config: {
+      headers: {
+        'User-Agent': 'Mozilla/5.0',
+        'Accept': 'application/json, text/plain, */*',
+        'Cookie': 'uid=123456',
+      }
+    },
     callback: undefined,
     env: {},
   }],
 }, {
   input: 'send2 --env "a:10" --env "b:{\\"test\\": \\"abc\\"}" --env "c: \\"def\\""',
-  output: [{}, undefined, {
+  output: [{
+    config: {},
     callback: undefined,
     env: {
       a: 10,
