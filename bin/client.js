@@ -23,7 +23,7 @@ program
   .option('--callback <script>', 'Scripts run after fetch success.')
   .option('--env <env>', 'Env.', parseData, {})
   .option('--json-string', 'Return data in JSON string format.')
-  .option('--base-config', 'Specify a base config file.')
+  .option('--base-config <baseConfig>', 'Specify a base config file.')
 // .option('-o, --output <file>', 'Write to file instead of stdout.')
   .on('--help', function () {
     console.log('')
@@ -52,11 +52,12 @@ if (!subCommand.includes(process.argv[2])) {
   })
 
   const configFileName = program.config && path.join(process.env.PWD, program.config)
+  const baseConfig = program.baseConfig && path.join(process.env.PWD, program.baseConfig)
   request({
     config,
     configFileName,
     env: program.env,
-    baseConfig: program.baseConfig,
+    baseConfigFileName: baseConfig,
     callback: program.callback,
   }).then(res => console.log(program.jsonString ? JSON.stringify(res) : res))
 }
