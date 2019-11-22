@@ -4,15 +4,19 @@ const program = require('commander')
 const request = require('../lib/client')
 const parseData = require('../lib/parseData')
 const parseHeader = require('../lib/parseHeader')
+const runSubCommand = require('../lib/runSubCommand')
+const runRequest = require('../lib/runRequest')
+const pkg = require('../package.json')
 
 const subCommand = [
   'help',
+  'test',
   // 'configs',
 ]
 
 program
   .usage('[url] [options] | send2 [command] [options]')
-  .version('0.0.3')
+  .version(pkg.version)
   .description('Transfer data from or to a server.')
   .option('-K, --config <path>', 'Specify a JavaScript file to read arguments from.')
   .option('-X, --request <method>', 'Specify a custom request method to use when communicating with the server.')
@@ -24,7 +28,7 @@ program
   .option('--env <env>', 'Env.', parseData, {})
   .option('--json-string', 'Return data in JSON string format.')
   .option('--base-config <baseConfig>', 'Specify a base config file.')
-// .option('-o, --output <file>', 'Write to file instead of stdout.')
+  // .option('-o, --output <file>', 'Write to file instead of stdout.')
   .on('--help', function () {
     console.log('')
     console.log('Examples:')
@@ -32,32 +36,11 @@ program
     console.log('  $ send2 -K ./configs/fetch-data.js')
     console.log('  $ send2 --data "{\"a\": 10, \"b\": 20}"')
   })
-// .command('configs', 'Get final configs', {executableFile: 'configs'})
+  .command('test [options]', 'Run test.', {executableFile: 'test'})
+  // .command('configs', 'Get final configs', {executableFile: 'configs'})
+  .action(runSubCommand)
   .parse(process.argv)
 
 if (!subCommand.includes(process.argv[2])) {
-  const config = (function getConfigFromCommandLine(config) {
-    const result = {}
-    Object.keys(config).forEach(function (key) {
-      if (typeof config[key] !== 'undefined') {
-        result[key] = config[key]
-      }
-    })
-    return result
-  })({
-    data: program.data,
-    url: program.url || program.args[0],
-    headers: program.header,
-    method: program.request || program.method,
-  })
-
-  const configFileName = program.config && path.join(process.env.PWD, program.config)
-  const baseConfig = program.baseConfig && path.join(process.env.PWD, program.baseConfig)
-  request({
-    config,
-    configFileName,
-    env: program.env,
-    baseConfigFileName: baseConfig,
-    callback: program.callback,
-  }).then(res => console.log(program.jsonString ? JSON.stringify(res) : res))
+  runRequest(program)
 }

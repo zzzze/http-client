@@ -24,6 +24,6 @@ describe('genCallback', () => {
 
   it('Called with undefined', () => {
     const callback = genCallback()
-    expect(callback).to.be.equal('function (res) { return res.data }')
+    expect(callback).to.be.equal('function (res) { return { status: res.status, statusText: res.statusText, data: res.data } }')
   })
 })
