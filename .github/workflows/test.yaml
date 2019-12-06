@@ -11,6 +11,3 @@ jobs:
     - run: npm install yarn -g
     - run: yarn install
     - run: npm test
-    - uses: ./
-      with:
-        milliseconds: 1000
