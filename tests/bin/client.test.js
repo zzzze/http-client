@@ -23,8 +23,11 @@ describe('Command line test', () => {
         return result
       }, [])
     argvStub.value([].concat(['node'], argv))
+    const runRequest = proxyquire('../../lib/runRequest', {
+      './client': requestStub,
+    })
     proxyquire('../../bin/client', {
-      '../lib/client': requestStub,
+      '../lib/runRequest': runRequest,
     })
   }
 

@@ -12,7 +12,7 @@
     "yarn.lock"
   ],
   "scripts": {
-    "test": "mocha tests/**/*.test.js",
+    "test": "mocha tests/*.test.js tests/**/*.test.js",
     "mocha": "mocha"
   },
   "author": "",
