@@ -2,13 +2,14 @@ const EventEmitter = require('events').EventEmitter
 
 const PREFIX = 'type-'
 
-class DocletTraverse extends EventEmitter {
+class DocletTraverse {
   constructor(doclets, context) {
-    super()
     context.result.push(...JSON.parse(JSON.stringify(doclets)).filter(this._filter))
     this._doclets = context.result
     this._index = 0
     this._map = context.map || {}
+    this._eventBus = context.eventBus || new EventEmitter
+    this._innerEventBus = !context.eventBus
     this._listenerKey = []
   }
 
@@ -16,7 +17,7 @@ class DocletTraverse extends EventEmitter {
     return !doclet.undocumented
   }
 
-  next() {
+  _next() {
     const doclet = this._doclets[this._index]
     if (typeof doclet === 'undefined') {
       throw Error('Doclet not found.')
@@ -41,37 +42,43 @@ class DocletTraverse extends EventEmitter {
     return new RegExp(pattern, 'i').test(name)
   }
 
-  _handleFindDoclet(doclet) {
-    if (!doclet.longname) return
-    this._map[doclet.longname] = doclet
-    this.emit(`${PREFIX}${doclet.longname}`, doclet)
+  _isProperty(doclet) {
+    return !doclet.longname
   }
 
-  _handleTraverseProperty(doclets) {
+  _handleFindDoclet(doclet) {
+    if (this._isProperty(doclet)) return
+    this._map[doclet.longname] = doclet
+    this._eventBus.emit(`${PREFIX}${doclet.longname}`, doclet)
+  }
+
+  _handleTraverseProperty(doclets, check) {
     const context = {
       result: [],
       map: this._map,
+      eventBus: this._eventBus,
     }
-    new this.constructor(doclets, context).run()
+    new this.constructor(doclets, context, ).run({check})
     return context.result
   }
 
   _checkAllCustomTypeFound() {
+    if (!this._innerEventBus) return
     if (!this._listenerKey.length) return
     const typeNotFound = []
     this._listenerKey.forEach(key => {
-      if (this.listeners(key).length) {
+      if (this._eventBus.listeners(key).length) {
         typeNotFound.push(key.replace(PREFIX, ''))
       }
     })
     if (typeNotFound.length) {
-      throw Error(`Type not found: [${typeNotFound.join(', ')}]`)
+      throw Error(`Type not found: [ ${typeNotFound.join(', ')} ]`)
     }
   }
 
   run({check = true} = {}) {
     while(true) {
-      const value = this.next()
+      const value = this._next()
       if (value.doclet.undocumented) {
         continue
       }
@@ -83,7 +90,7 @@ class DocletTraverse extends EventEmitter {
             if (!~this._listenerKey.indexOf(key)) {
               this._listenerKey.push(key)
             }
-            this.once(key, (doclet) => {
+            this._eventBus.once(key, (doclet) => {
               value.doclet.type.names[index] = doclet
             })
           } else {
@@ -92,7 +99,7 @@ class DocletTraverse extends EventEmitter {
         })
       }
       if (value.doclet.properties) {
-        value.doclet.properties = this._handleTraverseProperty(value.doclet.properties)
+        value.doclet.properties = this._handleTraverseProperty(value.doclet.properties, check)
       }
       this._handleFindDoclet(value.doclet)
       if (value.done) break

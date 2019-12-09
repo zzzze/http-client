@@ -1,7 +1,7 @@
 const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
 const Router = require('@koa/router')
-const getCommentData = require('./getComments')
+const getConfigDoclet = require('./getConfigDoclet')
 
 const app = new Koa()
 const router = new Router()
@@ -9,8 +9,8 @@ const router = new Router()
 
 router.get('/', async (ctx, next) => {
   // ctx.router available
-  const comments = await getCommentData()
-  ctx.body = comments
+  const configDoclet = getConfigDoclet()
+  ctx.body = configDoclet
 })
 
 

@@ -110,7 +110,7 @@ describe('DocletTraverse -  property', () => {
       }
       let traverse = new DocletTraverse(testCase.input, context)
       traverse.run({check: false})
-      traverse.emit('type-Send2.Config.Url', {
+      traverse._eventBus.emit('type-Send2.Config.Url', {
         longname: 'Send2.Config.Url',
         type: {
           names: [
@@ -147,6 +147,6 @@ describe('DocletTraverse -  property', () => {
 
     expect(() => {
       new DocletTraverse(doclets, {result: [], map: {}}).run()
-    }).to.throw('Type not found: [C, D, E]')
+    }).to.throw('Type not found: [ C, D, E ]')
   })
 })

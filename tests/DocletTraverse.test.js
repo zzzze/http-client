@@ -286,6 +286,6 @@ describe('DocletTraverse', () => {
 
     expect(() => {
       new DocletTraverse(doclets, {result: [], map: {}}).run()
-    }).to.throw('Type not found: [C, D, E]')
+    }).to.throw('Type not found: [ C, D, E ]')
   })
 })
