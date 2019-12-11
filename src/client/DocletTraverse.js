@@ -33,6 +33,7 @@ class DocletTraverse {
 
   _shouldBeIgnored(name) {
     const pattern = '^[\"\'].*[\"\']$' + '|'
+      + '^\\d+$' + '|'
       + '^string$' + '|'
       + '^number$' + '|'
       + '^boolean$' + '|'
@@ -76,6 +77,43 @@ class DocletTraverse {
     }
   }
 
+  _mergeTypeNames(type, name, doclet) {
+    const index = type.names.indexOf(name)
+    if (!~index) return
+    // console.log(type, doclet.type)
+    //
+    if (doclet.type && Array.isArray(doclet.type.names)) {
+      type.names.splice(index, 1, ...doclet.type.names)
+    } else if (doclet.properties) {
+      type.names.splice(index, 1, doclet)
+    } else { return }
+
+    // 递归合并类型
+
+    if (doclet.type && Array.isArray(doclet.type.names)) {
+      const namesForCheck = [].concat(doclet.type.names)
+      this._checkAndMergeType(namesForCheck, type)
+    }
+  }
+
+  _checkAndMergeType(namesForCheck, type) {
+    namesForCheck.forEach((name, index) => {
+      if (this._shouldBeIgnored(name)) return
+      if (!this._map[name]) {
+        const key = `${PREFIX}${name}`
+        if (!~this._listenerKey.indexOf(key)) {
+          this._listenerKey.push(key)
+        }
+        this._eventBus.once(key, (doclet) => {
+          this._mergeTypeNames(type, name, doclet)
+        })
+      } else {
+        this._mergeTypeNames(type, name, this._map[name])
+      }
+    })
+
+  }
+
   run({check = true} = {}) {
     while(true) {
       const value = this._next()
@@ -83,20 +121,8 @@ class DocletTraverse {
         continue
       }
       if (value.doclet.type && Array.isArray(value.doclet.type.names)) {
-        value.doclet.type.names.forEach((name, index) => {
-          if (this._shouldBeIgnored(name)) return
-          if (!this._map[name]) {
-            const key = `type-${name}`
-            if (!~this._listenerKey.indexOf(key)) {
-              this._listenerKey.push(key)
-            }
-            this._eventBus.once(key, (doclet) => {
-              value.doclet.type.names[index] = doclet
-            })
-          } else {
-            value.doclet.type.names[index] = this._map[name]
-          }
-        })
+        const namesForCheck = [].concat(value.doclet.type.names)
+        this._checkAndMergeType(namesForCheck, value.doclet.type)
       }
       if (value.doclet.properties) {
         value.doclet.properties = this._handleTraverseProperty(value.doclet.properties, check)

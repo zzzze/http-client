@@ -1,3 +1,4 @@
+const merge = require('deepmerge')
 const splitAttrPath = attrPath => {
   return attrPath.replace(/([\[\]])/g, (match, p1) => {
     if (p1 == '[') return '.'
@@ -34,8 +35,61 @@ const setAttr = (obj, attrPath, value) => {
   return obj
 }
 
+const setAttrV2 = (properties) => {
+  const result = {}
+  return merge.all(properties.map(property => {
+    const keys = property.name.split('.')
+
+    let result_1 = {}
+    keys.reverse().forEach((key, index) => {
+      if (index === 0) {
+        result_1 = {
+          [key]: {
+            ...property,
+            name: key,
+          }
+        }
+      } else {
+        result_1 = {
+          [key]: {properties: result_1}
+        }
+      }
+    })
+    return result_1
+  }))
+}
+
+const mapPropertyObjToArr = (propertyObj, handler) => {
+  const obj = propertyObj
+  console.log(obj)
+  const trans = (_obj) => {
+    let copy = JSON.parse(JSON.stringify(_obj))
+    if (Array.isArray(copy)) {
+      return copy.map(item => trans(item))
+    }
+    if (typeof copy === 'string' || typeof copy === 'boolean' || typeof copy === 'number') {
+      return copy
+    }
+    const keys = Object.getOwnPropertyNames(copy)
+    if (!copy || !keys.length) return copy
+    copy = keys.reduce((result, key) => {
+      if (key !== 'properties') {
+        result[key] = trans(copy[key])
+      } else {
+        result[key] = handler(copy[key], trans) // Object.values(copy[key]).map(item => trans(item))
+      }
+      return result
+    }, {})
+
+    return copy
+  }
+  return trans(obj)
+}
+
 
 module.exports = {
   getAttr,
   setAttr,
+  setAttrV2,
+  mapPropertyObjToArr,
 }

@@ -44,15 +44,8 @@ const testCases = [
         longname: 'config',
         type: {
           names: [
-            {
-              longname: 'Send2.Config.Method',
-              type: {
-                names: [
-                  '\'GET\'',
-                  '\'POST\'',
-                ]
-              },
-            }
+            '\'GET\'',
+            '\'POST\'',
           ]
         },
       },
@@ -84,15 +77,8 @@ const testCases = [
         longname: 'config',
         type: {
           names: [
-            {
-              longname: 'Send2.Config.Method',
-              type: {
-                names: [
-                  '\'GET\'',
-                  '\'POST\'',
-                ]
-              },
-            }
+            '\'GET\'',
+            '\'POST\'',
           ]
         },
       }, {
@@ -149,23 +135,10 @@ const testCases = [
         longname: 'config',
         type: {
           names: [
-            {
-              longname: 'Send2.Config.Method',
-              type: {
-                names: [
-                  '\'GET\'',
-                  '\'POST\'',
-                ]
-              },
-            }, {
-              longname: 'Send2.Config.Method2',
-              type: {
-                names: [
-                  '\'PUT\'',
-                  '\'DELETE\'',
-                ]
-              },
-            }
+            '\'GET\'',
+            '\'POST\'',
+            '\'PUT\'',
+            '\'DELETE\'',
           ]
         },
       }, {
@@ -229,19 +202,88 @@ const testCases = [
           {
             type: {
               names: [
-                {
-                  longname: 'Send2.Config.Method',
-                  type: {
-                    names: [
-                      '\'GET\'',
-                      '\'POST\'',
-                    ]
-                  },
-                }
+                '\'GET\'',
+                '\'POST\'',
               ]
             },
           }
         ],
+      },
+    ],
+  },
+
+  // 4
+  {
+    input: [
+      {
+        longname: 'Method',
+        type: {
+          names: [
+            '\'GET\'',
+            '\'POST\'',
+            'Method1',
+          ]
+        },
+      }, {
+        longname: 'config',
+        type: {
+          names: [
+            'Method'
+          ]
+        },
+      }, {
+        longname: 'Method1',
+        type: {
+          names: [
+            '\'PUT\'',
+            'Method2'
+          ]
+        },
+      }, {
+        longname: 'Method2',
+        type: {
+          names: [
+            '\'DELETE\'',
+          ]
+        },
+      },
+    ],
+    output: [
+      {
+        longname: 'Method',
+        type: {
+          names: [
+            '\'GET\'',
+            '\'POST\'',
+            '\'PUT\'',
+            '\'DELETE\'',
+          ]
+        },
+      }, {
+        longname: 'config',
+        type: {
+          names: [
+            '\'GET\'',
+            '\'POST\'',
+            '\'PUT\'',
+            '\'DELETE\'',
+          ]
+        },
+      }, {
+        longname: 'Method1',
+        type: {
+          names: [
+            '\'PUT\'',
+            '\'DELETE\'',
+          ]
+        },
+      }, {
+        longname: 'Method2',
+        type: {
+          names: [
+            '\'DELETE\'',
+          ]
+        },
       },
     ],
   },
@@ -269,6 +311,7 @@ describe('DocletTraverse', () => {
             'C',
             'D',
             'Number',
+            1,
             'String',
           ]
         },
@@ -279,6 +322,8 @@ describe('DocletTraverse', () => {
             'object',
             'string',
             'E',
+            '"abc"',
+            2,
           ]
         },
       },

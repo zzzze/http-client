@@ -19,30 +19,17 @@ const testCases = [
       {
         type: {
           names: [
-            {
-              longname: 'Send2.Config.Method',
-              type: {
-                names: [
-                  '\'GET\'',
-                  '\'POST\'',
-                ]
-              },
-            }, {
-              longname: 'Send2.Config.Method2',
-              type: {
-                names: [
-                  '\'PUT\'',
-                  '\'DELETE\'',
-                ]
-              },
-            }
-          ]
+            '\'GET\'',
+            '\'POST\'',
+            '\'PUT\'',
+            '\'DELETE\'',
+          ],
         },
       },
     ],
   },
 
-  // 2
+  // 1
   {
     input: [
       {
@@ -58,23 +45,10 @@ const testCases = [
       {
         type: {
           names: [
-            {
-              longname: 'Send2.Config.Method',
-              type: {
-                names: [
-                  '\'GET\'',
-                  '\'POST\'',
-                ]
-              },
-            }, {
-              longname: 'Send2.Config.Url',
-              type: {
-                names: [
-                  'string',
-                ]
-              },
-            }
-          ]
+            '\'GET\'',
+            '\'POST\'',
+            'string',
+          ],
         },
       },
     ],
