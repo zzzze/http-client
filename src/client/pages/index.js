@@ -1,3 +1,4 @@
+import React from 'react'
 import Link from 'next/link'
 import axios from 'axios'
 
@@ -22,16 +23,10 @@ const sortTypes = names => {
   return result
 }
 
-// const isEnum = names => {
-//   return names.every(name => {
-//     return /^['"].*['"]$/.test(name) ||
-//       /^\d+$/.test(name) ||
-//       /^(true|false)$/.test(name)
-//   })
-// }
-let renderType 
+let Type
 
-const renderInput = (names) => {
+const renderInput = (property) => {
+  let names = property.type.names
   names = sortTypes(names)
   return names.map(name => {
     if (Array.isArray(name)) {
@@ -54,20 +49,73 @@ const renderInput = (names) => {
       </select>
     }
     if (name === 'object') {
-      return <textarea id="" name="" cols="30" rows="10"></textarea>
+      return <Type data={property}></Type>
     }
     if (name.properties) {
-      return renderType(name)
+      return <Type data={name}></Type>
     }
   })
 }
 
-renderType = type => {
-  return type.properties.map(property => {
-    return (
-      <div>{property.name}: {renderInput(property.type.names)}</div>
-    )
+const Checkbox = ({value, children, onChange}) => {
+  return (
+    <div>
+      {React.Children.map(children, child => {
+        return React.cloneElement(child, {
+          checked: child.props.value === value,
+          onChange,
+        })
+      })}
+    </div>
+  )
+}
+
+const CheckboxOption = ({value, checked, onChange}) =>  {
+  const handleChange = React.useCallback(() => {
+    onChange(value)
   })
+  return (
+    <>
+      <div className={checked ? 'option checked' : 'option'} onClick={handleChange}></div>
+      <style jsx>{`
+        .option {
+          width: 20px;
+          height: 20px;
+          border: 1px solid #333;
+          background: #fff;
+        }
+        .option.checked {
+          border-color: blue;
+          background: blue;
+        }
+      `}</style>
+    </>
+  )
+}
+
+Type = ({data}) => {
+  const [explodeProp, setExplodeProp] = React.useState(false)
+  React.useEffect(() => {
+    if (data.properties) {
+      setExplodeProp(true)
+    }
+  }, [])
+  return (
+    <div>
+      {/* {data.properties} */}
+      {!!data.properties && (
+        <Checkbox value={explodeProp} onChange={(value) => {console.log('value', value); setExplodeProp(value)}}>
+          <CheckboxOption value={true} ></CheckboxOption>
+          <CheckboxOption value={false} ></CheckboxOption>
+        </Checkbox>
+      )}
+      { explodeProp ? data.properties.map(property => {
+        return (
+          <div>{property.name}: {renderInput(property)}</div>
+        )
+      }): <textarea id="" name="" cols="30" rows="10"></textarea>}
+    </div>
+  )
 }
 
 const Index = (props) => (
@@ -77,7 +125,7 @@ const Index = (props) => (
     </Link>
     <p>Hello Next.js</p>
     <div>{props.data.description}</div>
-    {renderType(props.data)}
+    <Type data={props.data}></Type>
     <pre>{JSON.stringify(props.data, null, '   ')}</pre>
   </div>
 )
